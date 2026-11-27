@@ -1,44 +1,56 @@
 # Chip Studio
 
-An interactive CPU/chip visualizer with a live 4-bit ALU, editable signal graph, clocked simulator, and local AI tutor.
+**Chip Studio** is an interactive CPU and chip visualizer that makes digital hardware approachable. Instead of starting with a wall of Verilog or a textbook diagram, you can click inputs, watch signals travel through a circuit, step a clock, and ask a built-in tutor what is happening.
 
-## Run it
+It is designed for curious beginners, students, and teams prototyping a small digital design.
+
+## Instant live demo
+
+Open the public demo at [anatomik5.github.io/chip-studio-mvp](https://anatomik5.github.io/chip-studio-mvp/). It is deployed automatically with GitHub Pages whenever `main` changes.
+
+## One-click offline run — zero install
+
+Download [`release/chip-studio-mvp.html`](release/chip-studio-mvp.html), then double-click the file (or drag it into Chrome, Edge, Safari, or Firefox). Everything is bundled into that one HTML file—no Node.js, npm, account, API key, or local server is required.
+
+## What you can explore
+
+- **Live circuits:** drag blocks, connect compatible ports, delete wires, and see active signals glow.
+- **Clocked simulation:** toggle inputs, use Step Clock or Play, and inspect recent waveform history.
+- **Built-in designs:** switch between a 4-bit **Simple ALU** and an 8-bit **Mini CPU**.
+- **Verilog import:** open or paste `.v` source. Chip Studio extracts ports, widths, registers, and common combinational expressions into an editable netlist.
+- **AI Tutor:** ask how a component works, inspect it, add modules, or advance cycles. The default tutor is fully local and offline.
+- **Fix the Broken CPU:** complete three guided repair challenges by reconnecting the missing paths.
+
+## Start here
+
+1. Click an input value on the canvas and press **Step clock**.
+2. Choose **Mini CPU**, or load [`examples/simple_alu.v`](examples/simple_alu.v) / [`examples/mini_cpu.v`](examples/mini_cpu.v).
+3. Ask the Tutor “How does this ALU work?” or start a repair challenge in the sidebar.
+
+## AI and privacy
+
+Chip Studio starts in **Local offline mode** and needs no API key. You may optionally select an OpenAI-compatible or Anthropic provider in the Tutor settings. Any key you enter remains only in the current browser session; it is never saved and is never sent to a Chip Studio backend. Use **Clear Key & use local mode** to remove it immediately.
+
+## Developer local setup
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the local address shown in the terminal. No API key is required: the built-in tutor is ready immediately.
-
-## Open without installing anything
-
-Download or copy [`release/chip-studio-mvp.html`](release/chip-studio-mvp.html), then double-click it or drag it into any modern browser. It is a self-contained browser file: it does not need Node.js, npm, or a web server. GitHub Pages is also deployed automatically whenever `main` changes.
-
-## Try the MVP
-
-1. Click an input value on the canvas, then use **Step clock** or **Play** to see live wire colors and the rolling waveform panel.
-2. Open `examples/simple_alu.v` or `examples/mini_cpu.v` with **Open .v file**, or use **Paste Verilog**. The parser extracts ANSI-style ports, bit widths, registers, and common combinational expressions into the typed netlist.
-3. Ask the tutor about the ALU, inspect a component, add a module, or advance clock cycles. Provider settings optionally support OpenAI-compatible or Anthropic endpoints; keys remain in the current browser session.
-4. Select one of the three **Fix the Broken CPU** challenges, reconnect the missing compatible wire, then choose **Check repair**.
-
-## Development
+Useful commands:
 
 ```bash
-npm install
-npm run build
+npm run build             # normal Vite production build
+npm run build:standalone  # produces a self-contained HTML build
 ```
 
-For a production check, run `npm run build`.
+## Project structure
 
-## MVP capabilities
+- `src/engine/` — parsing and cycle simulation
+- `src/ui/` — the React Flow canvas, waveforms, and onboarding
+- `src/agent/` — local tutor, optional provider adapters, and guarded tool calls
+- `src/types/` — shared typed netlist contract
+- `examples/` — small Verilog designs to load and explore
 
-- Drag blocks and connect compatible output/input ports. Connections with incompatible bit widths are rejected.
-- Toggle input values and watch animated green logic-high wires and hexadecimal buses.
-- Play, pause, and step the cycle evaluator.
-- Ask the local tutor about the ALU/Zero flag, add an AND/XOR gate, register, or multiplexer, or request clock steps. Its dispatcher is separated so an OpenAI or Anthropic adapter can be added without changing the canvas.
-- `examples/` includes an ALU and a small accumulator CPU Verilog reference.
-
-## Two-person workflow
-
-Use short-lived branches such as `feat/simulator` and `feat/canvas`. Split work across `src/engine` + `src/types` versus `src/ui` + `src/agent`; coordinate any change to `src/types/netlist.ts` first. Rebase before merging and require `npm run build` on every branch.
+Contributions should follow the architecture and wire-width rules in [AGENTS.md](AGENTS.md).
