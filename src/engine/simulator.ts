@@ -71,3 +71,15 @@ export function createDemoNetlist(): Netlist { return { name: '4-bit ALU', nodes
   { id: 'alu', label: 'ALU', kind: 'alu', x: 360, y: 180, ports: [{ id: 'a', label: 'A', direction: 'input', width: 4 }, { id: 'b', label: 'B', direction: 'input', width: 4 }, { id: 'op', label: 'OP', direction: 'input', width: 1 }, { id: 'out', label: 'Result', direction: 'output', width: 4 }, { id: 'zero', label: 'Zero', direction: 'output', width: 1 }] },
   { id: 'result', label: 'Result', kind: 'output', x: 680, y: 200, ports: [{ id: 'in', label: 'Value', direction: 'input', width: 4 }] }, { id: 'zero', label: 'Zero flag', kind: 'output', x: 680, y: 350, ports: [{ id: 'in', label: 'Z', direction: 'input', width: 1 }] }
 ], wires: [{ id: 'a-alu', source: 'a', sourcePort: 'out', target: 'alu', targetPort: 'a', width: 4 }, { id: 'b-alu', source: 'b', sourcePort: 'out', target: 'alu', targetPort: 'b', width: 4 }, { id: 'op-alu', source: 'op', sourcePort: 'out', target: 'alu', targetPort: 'op', width: 1 }, { id: 'alu-result', source: 'alu', sourcePort: 'out', target: 'result', targetPort: 'in', width: 4 }, { id: 'alu-zero', source: 'alu', sourcePort: 'zero', target: 'zero', targetPort: 'in', width: 1 }] } }
+
+/** Built-in sequential preset that mirrors the small accumulator CPU example. */
+export function createMiniCpuNetlist(): Netlist { return { name: 'Mini 8-bit CPU', nodes: [
+  { id: 'instruction', label: 'Instruction bus', kind: 'input', x: 30, y: 100, ports: [{ id: 'out', label: 'Instruction', direction: 'output', width: 8 }] },
+  { id: 'pc', label: 'PC', kind: 'register', x: 250, y: 70, ports: [{ id: 'd', label: 'D', direction: 'input', width: 8 }, { id: 'q', label: 'Q', direction: 'output', width: 8 }] },
+  { id: 'ir', label: 'IR', kind: 'register', x: 250, y: 220, ports: [{ id: 'd', label: 'D', direction: 'input', width: 8 }, { id: 'q', label: 'Q', direction: 'output', width: 8 }] },
+  { id: 'acc', label: 'Accumulator', kind: 'register', x: 250, y: 390, ports: [{ id: 'd', label: 'D', direction: 'input', width: 8 }, { id: 'q', label: 'Q', direction: 'output', width: 8 }] },
+  { id: 'alu8', label: '8-bit ALU', kind: 'alu', x: 520, y: 300, ports: [{ id: 'a', label: 'A', direction: 'input', width: 8 }, { id: 'b', label: 'B', direction: 'input', width: 8 }, { id: 'op', label: 'OP', direction: 'input', width: 1 }, { id: 'out', label: 'Result', direction: 'output', width: 8 }, { id: 'zero', label: 'Zero', direction: 'output', width: 1 }] },
+  { id: 'acc-out', label: 'Accumulator output', kind: 'output', x: 800, y: 390, ports: [{ id: 'in', label: 'ACC', direction: 'input', width: 8 }] }
+], wires: [
+  { id: 'instruction-ir', source: 'instruction', sourcePort: 'out', target: 'ir', targetPort: 'd', width: 8 }, { id: 'acc-alu', source: 'acc', sourcePort: 'q', target: 'alu8', targetPort: 'a', width: 8 }, { id: 'ir-alu', source: 'ir', sourcePort: 'q', target: 'alu8', targetPort: 'b', width: 8 }, { id: 'alu-acc', source: 'alu8', sourcePort: 'out', target: 'acc', targetPort: 'd', width: 8 }, { id: 'acc-output', source: 'acc', sourcePort: 'q', target: 'acc-out', targetPort: 'in', width: 8 }
+] } }
