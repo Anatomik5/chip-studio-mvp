@@ -11,6 +11,10 @@ npm run dev
 
 Then open the local address shown in the terminal. No API key is required: the built-in tutor is ready immediately.
 
+## Open without installing anything
+
+Download or copy [`release/chip-studio-mvp.html`](release/chip-studio-mvp.html), then double-click it or drag it into any modern browser. It is a self-contained browser file: it does not need Node.js, npm, or a web server. GitHub Pages is also deployed automatically whenever `main` changes.
+
 ## Try the MVP
 
 1. Click an input value on the canvas, then use **Step clock** or **Play** to see live wire colors and the rolling waveform panel.
